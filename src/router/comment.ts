@@ -549,7 +549,18 @@ async function getRecentComments(c: any) {
 }
 
 async function getCommentCount(c: any) {
-	const paths = c.req.queries("path") || c.req.queries("path[]") || [];
+	// Official @waline/client fetches comment counts as
+	// `comment?type=count&url=<path1>,<path2>` (single `url` param, comma-joined),
+	// while some embeds/admin tools use `path`/`path[]`. Collect every accepted
+	// param name, then split values on commas like the official server does.
+	const paths = [
+		...(c.req.queries("url") || []),
+		...(c.req.queries("url[]") || []),
+		...(c.req.queries("path") || []),
+		...(c.req.queries("path[]") || []),
+	]
+		.flatMap((p: string) => p.split(","))
+		.filter(Boolean);
 	if (paths.length === 0) {
 		return c.json({ errno: 0, errmsg: "", data: 0 });
 	}

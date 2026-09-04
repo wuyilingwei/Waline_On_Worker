@@ -31,13 +31,29 @@ const VALID_FIELDS = new Set([
  *   - multiple paths: [{[type]: count}, …]
  */
 articleRoutes.get("/", async (c) => {
-	const paths = c.req.queries("path") || c.req.queries("path[]") || [];
+	// Official @waline/client fetches counters as
+	// `article?path=<path1>,<path2>&type=time,reaction0` (comma-joined single
+	// params), while some embeds use `path[]`/`type[]`. Split values on commas
+	// like the official server does.
+	const paths = [
+		...(c.req.queries("path") || []),
+		...(c.req.queries("path[]") || []),
+	]
+		.flatMap((p: string) => p.split(","))
+		.filter(Boolean);
 	if (paths.length === 0) {
 		return c.json({ errno: 0, errmsg: "", data: 0 });
 	}
 
-	const types = c.req.queries("type") || c.req.queries("type[]") || ["time"];
-	const validTypes = types.filter((t) => VALID_FIELDS.has(t));
+	const types = [
+		...(c.req.queries("type") || []),
+		...(c.req.queries("type[]") || []),
+	]
+		.flatMap((t: string) => t.split(","))
+		.filter(Boolean);
+	const validTypes = (types.length > 0 ? types : ["time"]).filter((t: string) =>
+		VALID_FIELDS.has(t),
+	);
 	if (validTypes.length === 0) {
 		return c.json({ errno: 0, errmsg: "", data: paths.map(() => ({})) });
 	}
