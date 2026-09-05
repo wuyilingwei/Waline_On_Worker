@@ -54,7 +54,7 @@ For international audience: [English Documentation](README_EN.md)
 - [x] RSS 订阅
 - [x] 数据导入导出（兼容 @waline/admin 迁移面板）
 - [x] **Akismet 反垃圾评论**（四档：关 / Akismet / LLM / Mix）
-- [x] LLM 评论审查（内嵌 [waline-plugin-llm-reviewer-next](https://github.com/wuyilingwei/waline-plugin-llm-reviewer-next) 设计，支持自然语言安全策略）
+- [x] LLM 评论审查（内嵌 [waline-plugin-llm-reviewer-next](https://github.com/lsy-404/waline-plugin-llm-reviewer-next) 设计，支持自然语言安全策略）
 - [x] 评论默认状态控制（匿名 / 登录用户独立设置）
 - [x] 管理面板（@waline/admin CDN + Worker 设置页）
 - [x] IP 频率限制 (IPQPS) 可直接配置 Cloudflare 安全规则实现
