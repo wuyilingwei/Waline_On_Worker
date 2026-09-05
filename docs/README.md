@@ -15,7 +15,7 @@ For international audience: [English Documentation](README_EN.md)
 
 ```bash
 # 克隆仓库
-git clone https://github.com/wuyilingwei/Waline_On_Worker.git
+git clone https://github.com/lsy-404/Waline_On_Worker.git
 cd Waline_On_Worker
 
 # 运行部署脚本

@@ -14,7 +14,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/wuyilingwei/Waline_On_Worker.git"
+		"url": "git+https://github.com/lsy-404/Waline_On_Worker.git"
 	},
 	"keywords": [
 		"waline",
@@ -22,7 +22,7 @@
 		"comment-system",
 		"d1"
 	],
-	"author": "wuyilingwei",
+	"author": "Siyu Lei",
 	"license": "MIT",
 	"dependencies": {
 		"bcryptjs": "^3.0.3",

@@ -13,7 +13,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/wuyilingwei/Waline_On_Worker.git
+git clone https://github.com/lsy-404/Waline_On_Worker.git
 cd Waline_On_Worker
 
 # Run deployment script

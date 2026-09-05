@@ -94,7 +94,7 @@ This dual-placement design means you can manage the key however fits your workfl
 ## Quick Start
 
 ```bash
-git clone https://github.com/wuyilingwei/Waline_On_Worker.git
+git clone https://github.com/lsy-404/Waline_On_Worker.git
 cd Waline_On_Worker
 pnpm install
 

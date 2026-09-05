@@ -95,7 +95,7 @@ Akismet API Key 支持**两种放置方式**，环境变量优先级始终高于
 ## 快速开始
 
 ```bash
-git clone https://github.com/wuyilingwei/Waline_On_Worker.git
+git clone https://github.com/lsy-404/Waline_On_Worker.git
 cd Waline_On_Worker
 pnpm install
 
