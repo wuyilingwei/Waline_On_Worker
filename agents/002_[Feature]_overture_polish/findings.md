@@ -7,4 +7,5 @@
 - [无域名完成页] -> Overture 核心在未收到 recipe URL 且 `target.domain` 为空时会启用/查询 Workers subdomain，并生成 `https://<worker>.<subdomain>.workers.dev` -> recipe 只需避免调用 `domains.attach` 且不写入 `result.url`。
 - [可选自定义域名权限] -> 现有 Overture 授权与能力分析在 Target 之前静态进行 -> 包保留 `domains` capability 和标记为 optional 的 Routes/Zone 权限，以支持填写域名；即使本次留空，OAuth/API Token 模板仍会展示这些权限，文档已明确此点。
 - [验证] -> 安装锁定依赖后，`pnpm test:overture` 通过：归档校验、无域名与中英文 recipe 行为、schema 重放以及 Miniflare 包运行时冒烟测试全部成功。
-- [完整测试] -> `pnpm test` 无法启动，因为 gitignore 排除的根目录 `wrangler.toml` 不存在，Cloudflare Vitest pool 读取该文件时发生 ENOENT；包专项测试不依赖该本机配置且已通过。
+- [完整测试] -> 从公开的 `wrangler.toml.example` 仅在当前 worktree 生成被 gitignore 的 `wrangler.toml` 后，`pnpm test` 通过 12 个测试文件、132 项测试；未使用真实账户配置，也未加入提交。
+- [版本与 URL] -> `build:overture` 已固定 `--version 1.1.2 --tag v1.1.2`；无自定义域名的 `ctx.result` 不含 `url` 字段，自定义域名非空时才构造 URL，因此不会生成 `https://undefined`。
