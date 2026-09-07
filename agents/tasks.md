@@ -6,3 +6,4 @@
 | 编号 | 任务名称 | 任务描述 | 变更动机 | 状态 |
 | :--: | :------: | :------: | :------: | :--: |
 | 001 | [Feature]_overture_release_package | 提供 Overture 发布包、配方、自动构建、验证及中英文部署文档 | 让 Waline on Worker 可由 Overture 安全部署 | 🔄 进行中 |
+| 002 | [Feature]_overture_polish | 使 Overture 包支持无自定义域名部署，补全条款、国际化和推荐入口 | 消除不必要的域名前置条件并完整说明部署影响 | ✅ 已完成 |

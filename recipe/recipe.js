@@ -4,8 +4,27 @@ function shouldGenerateJwt(ctx) {
   return ctx.ctx.mode === "fresh" || ctx.ctx.fullRebuild || ctx.ctx.inputs.regenerate_jwt === true;
 }
 
+function messages(locale) {
+  if (locale === "zh-CN") {
+    return {
+      rebuildSkipped: "未请求完整重建",
+      jwtGenerated: "已生成新的 JWT 密钥",
+      jwtPreserved: "已保留现有 JWT 密钥",
+      completed: "首次注册的用户将成为管理员。",
+    };
+  }
+  return {
+    rebuildSkipped: "Full rebuild was not requested",
+    jwtGenerated: "A new JWT secret was generated",
+    jwtPreserved: "Existing JWT secret was preserved",
+    completed: "The first registered user becomes an administrator.",
+  };
+}
+
 export async function deploy(ctx) {
-  const { domain, fullRebuild, inputs } = ctx.ctx;
+  const { domain, fullRebuild, inputs, locale } = ctx.ctx;
+  const copy = messages(locale);
+  const customDomain = typeof domain === "string" ? domain.trim() : "";
 
   await ctx.step("database", "running");
   await ctx.d1.provision("db");
@@ -21,7 +40,7 @@ export async function deploy(ctx) {
     await ctx.worker.deleteScript();
     await ctx.step("rebuild", "success");
   } else {
-    await ctx.step("rebuild", "skipped", "Full rebuild not requested");
+    await ctx.step("rebuild", "skipped", copy.rebuildSkipped);
   }
 
   await ctx.step("worker", "running");
@@ -30,16 +49,16 @@ export async function deploy(ctx) {
     ...(secureDomains ? {} : { preserveLiveVars: ["SECURE_DOMAINS"] }),
   });
   await ctx.worker.switchTraffic(versionId);
-  await ctx.domains.attach(domain);
+  if (customDomain) await ctx.domains.attach(customDomain);
   await ctx.step("worker", "success");
 
   await ctx.step("secret", "running");
   if (shouldGenerateJwt(ctx)) {
     await ctx.secrets.put("JWT_SECRET", await ctx.crypto.randomBase64(48));
-    await ctx.step("secret", "success", "A new JWT secret was generated");
+    await ctx.step("secret", "success", copy.jwtGenerated);
   } else {
-    await ctx.step("secret", "skipped", "Existing JWT secret preserved");
+    await ctx.step("secret", "skipped", copy.jwtPreserved);
   }
 
-  await ctx.result({ url: `https://${domain}`, notes: ["The first registered user becomes an administrator."] });
+  await ctx.result({ ...(customDomain ? { url: `https://${customDomain}` } : {}), notes: [copy.completed] });
 }

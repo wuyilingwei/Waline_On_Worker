@@ -16,8 +16,8 @@
   "terms": {
     "required": true,
     "texts": {
-      "zh-CN": "部署会在你的 Cloudflare 账户中创建或复用一个 D1 数据库、部署 Worker，并写入 JWT_SECRET。普通更新保留现有 D1 数据与 JWT_SECRET；完整重建会保留 D1 数据，但会生成新的 JWT_SECRET，现有登录会话将失效。",
-      "*": "Deployment creates or reuses a D1 database in your Cloudflare account, deploys a Worker, and writes JWT_SECRET. Regular updates preserve existing D1 data and JWT_SECRET. A full rebuild preserves D1 data but generates a new JWT_SECRET, invalidating existing login sessions."
+      "zh-CN": "使用本部署包即表示你授权 Overture 代表你调用本清单列出的 Cloudflare 账户权限，用于创建或复用 D1、部署和配置此 Worker；可选的自定义域名仅在你填写时绑定。Cloudflare 资源、请求、存储、带宽、域名及第三方服务产生的费用由你与相应服务商的协议决定，并由你负责。OAuth 仅在所用 Overture 实例启用并配置时可用；OAuth 授权或 Account API Token 仅用于当前部署流程。你应使用最小权限、妥善保管并可随时在 Cloudflare 撤销 Token。首次部署或你明确选择重建密钥时会写入新的 JWT_SECRET；泄露、轮换或重建会使相关登录会话失效。普通更新会复用选定的 D1 并以可重复执行的 schema 语句更新，不删除现有数据；你负责在重建、迁移、删除或改绑数据库前完成备份并确认目标资源。评论、账户资料、日志及 OAuth 代理或其他第三方处理的数据受你、Cloudflare、Waline 及所选第三方各自的条款和隐私政策约束；本包不会替代你的隐私告知、内容治理或数据保护义务。你负责安全配置 Worker、CORS、管理员账号、密钥、备份、域名和适用法律合规，并自行验证部署结果。本项目按 GPL-3.0-or-later 提供，在适用法律允许的最大范围内不提供明示或默示担保，作者和贡献者不对部署、数据丢失、服务中断、第三方行为或间接损失承担责任。",
+      "*": "By using this deployment package, you authorize Overture to use the listed Cloudflare account permissions to create or reuse D1 and deploy and configure this Worker. An optional custom domain is attached only when you provide one. Charges for Cloudflare resources, requests, storage, bandwidth, domains, and third-party services are governed by your agreements with those providers and remain your responsibility. OAuth is available only when the Overture instance you use enables and configures it; OAuth authorization or an Account API Token is used only for the current deployment. Use least privilege, protect the credential, and revoke it in Cloudflare when appropriate. A new JWT_SECRET is written on first deployment or when you explicitly regenerate it; disclosure, rotation, or regeneration invalidates affected login sessions. Ordinary updates reuse the selected D1 database and apply replay-safe schema statements without deleting existing data; you are responsible for backups and for confirming target resources before rebuilding, migrating, deleting, or rebinding a database. Comments, account information, logs, and data handled by OAuth proxies or other third parties are subject to your terms and privacy notices and those of Cloudflare, Waline, and the selected providers; this package does not replace your privacy, content-governance, or data-protection obligations. You are responsible for securely configuring the Worker, CORS, administrator account, secrets, backups, domain, and compliance with applicable law, and for verifying the deployment. This project is provided under GPL-3.0-or-later, without express or implied warranty to the maximum extent permitted by law; authors and contributors are not liable for deployment outcomes, data loss, service interruption, third-party conduct, or indirect loss."
     }
   },
   "authModes": ["oauth", "auto"],
@@ -42,12 +42,12 @@
     },
     {
       "key": "workers_routes",
-      "requirement": "required",
+      "requirement": "optional",
       "oauthScopes": ["workers-routes.read", "workers-routes.write", "zone.read"],
       "scope": "zone",
       "level": "write",
       "label": { "en": "Workers Routes and Zones", "zh-CN": "Workers 路由与区域" },
-      "scenario": { "en": "Attach the Worker to your Cloudflare-managed domain.", "zh-CN": "将 Worker 绑定到你由 Cloudflare 托管的域名。" }
+      "scenario": { "en": "Attach the Worker to a custom domain only when you provide one. The package retains these optional permissions so a later custom-domain deployment can complete.", "zh-CN": "仅在你填写自定义域名时绑定 Worker。包保留这些可选权限，以便后续填写自定义域名的部署能够完成。" }
     }
   ],
   "resources": [
@@ -79,9 +79,8 @@
     {
       "id": "domain",
       "kind": "domain",
-      "required": true,
-      "label": { "en": "Cloudflare-managed domain", "zh-CN": "由 Cloudflare 托管的域名" },
-      "help": { "en": "A hostname in a Cloudflare zone where Waline will be available.", "zh-CN": "Waline 将使用的、位于 Cloudflare 区域中的主机名。" }
+      "label": { "en": "Custom domain", "zh-CN": "自定义域名" },
+      "help": { "en": "Optional. Leave empty to use the Worker’s workers.dev address. A custom hostname must be in a Cloudflare zone you control.", "zh-CN": "可选。留空即可使用 Worker 的 workers.dev 地址；自定义主机名必须位于你有权管理的 Cloudflare 区域中。" }
     },
     {
       "id": "regenerate_jwt",
@@ -96,7 +95,7 @@
     { "id": "database", "label": { "en": "Provision comment database", "zh-CN": "准备评论数据库" } },
     { "id": "schema", "label": { "en": "Apply database schema", "zh-CN": "写入数据库结构" } },
     { "id": "rebuild", "label": { "en": "Rebuild Worker if requested", "zh-CN": "按需完整重建 Worker" }, "optional": true },
-    { "id": "worker", "label": { "en": "Deploy and attach Worker", "zh-CN": "部署并绑定 Worker" }, "weight": 2 },
+    { "id": "worker", "label": { "en": "Deploy Worker and optionally attach domain", "zh-CN": "部署 Worker 并按需绑定域名" }, "weight": 2 },
     { "id": "secret", "label": { "en": "Configure JWT secret", "zh-CN": "配置 JWT 密钥" } }
   ],
   "health": { "path": "/" },

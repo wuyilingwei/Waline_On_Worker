@@ -86,14 +86,14 @@ This dual-placement design means you can manage the key however fits your workfl
 
 ## Recommended deployment: Overture
 
-Deploy directly through the [public Overture deployment page](https://overture.demo-w10v.workers.dev/?src=lsy-404/Waline_On_Worker) without installing Node.js or Wrangler locally. Prepare a Cloudflare-managed domain, then select a release from this repository. Overture creates or reuses the D1 database, applies the schema, deploys the Worker, attaches that domain, and generates `JWT_SECRET` on the first deployment.
+Deploy directly through the [Overture deployment page](https://overture.voidcarve.com/?src=lsy-404/Waline_On_Worker) without installing Node.js or Wrangler locally. Select a release from this repository and Overture creates or reuses the D1 database, applies the schema, deploys the Worker, and generates `JWT_SECRET` on the first deployment. A custom domain is optional: leave it empty to use the Worker’s `workers.dev` address, or provide one to attach it.
 
-Overture supports two Cloudflare authentication methods:
+Overture can offer the following Cloudflare authentication methods:
 
-- **OAuth**: authorize the required Workers Scripts, D1, and domain-attachment permissions with Cloudflare.
+- **OAuth**: when the Overture instance has enabled and configured OAuth, authorize Workers Scripts, D1, and the route and zone permissions needed for an optional custom domain with Cloudflare.
 - **Account API Token**: create and paste a token using Overture's prefilled permission template. The token is used only for this deployment and is never stored as an application credential.
 
-Regular updates preserve comment data and the existing `JWT_SECRET`. A full rebuild also preserves D1 data but generates a new `JWT_SECRET`, invalidating current login sessions. Leaving the CORS origins field empty during an update preserves the current `SECURE_DOMAINS`; clear or change it in the Cloudflare Dashboard Worker variables.
+Regular updates preserve comment data and the existing `JWT_SECRET`. A full rebuild also preserves D1 data but generates a new `JWT_SECRET`, invalidating current login sessions. Leaving the CORS origins field empty during an update preserves the current `SECURE_DOMAINS`; clear or change it in the Cloudflare Dashboard Worker variables. To retain the ability to provide a custom domain, the OAuth and API Token permission template still lists route and zone access even when you leave the domain empty. Read and accept the package’s complete English and Chinese terms before deployment; they explain account charges, credential handling, and data responsibilities.
 
 ## Manual deployment
 

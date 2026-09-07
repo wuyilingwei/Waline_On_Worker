@@ -2,9 +2,9 @@
 
 ## Recommended deployment: Overture
 
-Prepare a Cloudflare-managed domain, open the [public Overture deployment page](https://overture.demo-w10v.workers.dev/?src=lsy-404/Waline_On_Worker), then select a release from this repository. It creates or reuses D1, applies the schema, deploys the Worker, attaches the domain, and generates `JWT_SECRET` for a first deployment.
+Open the [Overture deployment page](https://overture.voidcarve.com/?src=lsy-404/Waline_On_Worker), then select a release from this repository. It creates or reuses D1, applies the schema, deploys the Worker, and generates `JWT_SECRET` for a first deployment. A custom domain is optional: leave it empty for the Worker’s `workers.dev` address, or provide one to attach it.
 
-Choose **OAuth** to authorize Workers Scripts, D1, and domain attachment, or **Account API Token** to create and paste a token from Overture's prefilled permission template. The token is used only for this deployment and never becomes an application credential. Regular updates retain comment data and `JWT_SECRET`; a full rebuild retains D1 data but creates a new secret and invalidates login sessions. An empty CORS origins field during an update preserves `SECURE_DOMAINS`; clear or change it in the Cloudflare Dashboard Worker variables.
+Choose **OAuth**, only when the Overture instance has enabled and configured it, to authorize Workers Scripts, D1, and the route and zone permissions needed for an optional custom domain; otherwise use an **Account API Token** created and pasted from Overture's prefilled permission template. The token is used only for this deployment and never becomes an application credential. Regular updates retain comment data and `JWT_SECRET`; a full rebuild retains D1 data but creates a new secret and invalidates login sessions. An empty CORS origins field during an update preserves `SECURE_DOMAINS`; clear or change it in the Cloudflare Dashboard Worker variables. To retain the ability to provide a custom domain, the OAuth and API Token permission template still lists route and zone access even when you leave the domain empty. Read and accept the package’s complete English and Chinese terms before deployment; they explain account charges, credential handling, and data responsibilities.
 
 ## Manual deployment
 

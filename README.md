@@ -87,14 +87,14 @@ Akismet API Key 支持**两种放置方式**，环境变量优先级始终高于
 
 ## 推荐部署：Overture
 
-使用 [Overture 公共部署入口](https://overture.demo-w10v.workers.dev/?src=lsy-404/Waline_On_Worker) 可以直接部署，无需本地安装 Node.js 或 Wrangler。准备一个由 Cloudflare 托管的域名后，选择本仓库的发布版本；Overture 会创建或复用 D1 数据库、写入 schema、部署 Worker、绑定该域名，并在首次部署时生成 `JWT_SECRET`。
+使用 [Overture 部署入口](https://overture.voidcarve.com/?src=lsy-404/Waline_On_Worker) 可以直接部署，无需本地安装 Node.js 或 Wrangler。选择本仓库的发布版本后，Overture 会创建或复用 D1 数据库、写入 schema、部署 Worker，并在首次部署时生成 `JWT_SECRET`。自定义域名是可选项：留空会使用 Worker 的 `workers.dev` 地址；填写时才会绑定该域名。
 
-Overture 提供两种 Cloudflare 认证方式：
+Overture 可提供以下 Cloudflare 认证方式：
 
-- **OAuth**：在 Cloudflare 授权 Workers Scripts、D1 和域名绑定所需的权限。
+- **OAuth**：在所用 Overture 实例已启用并配置 OAuth 时，可在 Cloudflare 授权 Workers Scripts、D1 以及可选自定义域名所需的路由与区域权限。
 - **Account API Token**：使用 Overture 预填权限模板创建并粘贴 API Token；该 Token 只用于本次部署，不会作为应用凭据保存。
 
-普通更新保留评论数据和已有 `JWT_SECRET`。完整重建也保留 D1 数据，但会生成新的 `JWT_SECRET`，使现有登录会话失效。更新时将 CORS 源地址留空会保留当前 `SECURE_DOMAINS`；如需清空它，请在 Cloudflare Dashboard 的 Worker 变量中修改。
+普通更新保留评论数据和已有 `JWT_SECRET`。完整重建也保留 D1 数据，但会生成新的 `JWT_SECRET`，使现有登录会话失效。更新时将 CORS 源地址留空会保留当前 `SECURE_DOMAINS`；如需清空它，请在 Cloudflare Dashboard 的 Worker 变量中修改。为了保留填写自定义域名的能力，OAuth 和 API Token 权限模板仍会列出路由与区域权限，即使本次留空域名。部署前请阅读并接受包内提供的中英文条款，其中说明了账户费用、凭证与数据责任。
 
 ## 手动部署
 
