@@ -49,8 +49,14 @@ test("builds a verifiable Overture release package", () => {
   assert.equal(recipe.inputs.find((input) => input.id === "domain")?.required, undefined);
   assert.deepEqual(recipe.permissions.map((permission) => permission.key), ["workers_scripts", "d1", "workers_routes"]);
   assert.equal(recipe.permissions.find((permission) => permission.key === "workers_routes")?.requirement, "optional");
-  assert.match(recipe.terms.texts["zh-CN"], /数据保护义务/);
-  assert.match(recipe.terms.texts["*"], /data-protection obligations/);
+  assert.match(recipe.terms.texts["zh-CN"], /# Waline on Worker 部署条款/);
+  assert.match(recipe.terms.texts["zh-CN"], /## 7\. 许可、免责与法定权利/);
+  assert.match(recipe.terms.texts["zh-CN"], /关闭部署器不会自动撤销/);
+  assert.match(recipe.terms.texts["zh-CN"], /可能使攻击者伪造会话/);
+  assert.match(recipe.terms.texts["*"], /# Waline on Worker Deployment Terms/);
+  assert.match(recipe.terms.texts["*"], /## 7\. License, disclaimer, and statutory rights/);
+  assert.match(recipe.terms.texts["*"], /does not automatically revoke/);
+  assert.match(recipe.terms.texts["*"], /may allow an attacker to forge sessions/);
   const contents = execFileSync("tar", ["-tzf", archive], { encoding: "utf8" });
   for (const path of ["recipe.js", "worker/index.js", "migrations/schema.sql"]) assert.match(contents, new RegExp(`^${path}$`, "m"));
 });

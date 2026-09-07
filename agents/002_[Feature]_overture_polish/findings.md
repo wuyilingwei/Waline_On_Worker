@@ -9,3 +9,5 @@
 - [验证] -> 安装锁定依赖后，`pnpm test:overture` 通过：归档校验、无域名与中英文 recipe 行为、schema 重放以及 Miniflare 包运行时冒烟测试全部成功。
 - [完整测试] -> 从公开的 `wrangler.toml.example` 仅在当前 worktree 生成被 gitignore 的 `wrangler.toml` 后，`pnpm test` 通过 12 个测试文件、132 项测试；未使用真实账户配置，也未加入提交。
 - [版本与 URL] -> `build:overture` 已固定 `--version 1.1.2 --tag v1.1.2`；无自定义域名的 `ctx.result` 不含 `url` 字段，自定义域名非空时才构造 URL，因此不会生成 `https://undefined`。
+- [条款结构] -> 将原有单段中英文条款改为 Markdown 标题和七节对等条款，覆盖更新日期与范围、资格授权、费用、OAuth 实例条件、手动 Token、JWT 会话风险、数据库与备份、第三方隐私、自托管与终止、GPL 免责及不可放弃的法定权利；明确密钥泄露可能导致会话伪造，只有轮换或完整重建会使旧会话失效。
+- [复验] -> 使用忽略的模板测试配置，`pnpm test` 通过 132 项，`pnpm test:overture` 通过归档校验、recipe 行为与 Miniflare 运行时冒烟测试。

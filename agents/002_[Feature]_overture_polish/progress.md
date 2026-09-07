@@ -6,3 +6,4 @@
 - 2026-09-07：安装锁定依赖并运行 `pnpm test:overture`；Wrangler dry-run 打包、三项归档/recipe 校验以及 Miniflare 包运行时冒烟测试均通过。
 - 2026-09-07：仅在当前 worktree 从 `wrangler.toml.example` 复制被 gitignore 的 `wrangler.toml`，运行 `pnpm test`，12 个测试文件和 132 项测试全部通过；该本地文件不会提交。
 - 2026-09-07：复查 `build:overture` 为 `v1.1.2`，以及无域名与自定义域名 URL 分支，确认不会构造未配置域名的 URL。
+- 2026-09-07：按复审意见将发布包条款重构为七节、双语对等的 Markdown 正式条款，补充 Token、JWT、终止和法定权利说明；复跑 132 项完整测试、包校验与 Miniflare 冒烟测试，均通过。
