@@ -1,0 +1,104 @@
+{
+  "schema": 2,
+  "id": "waline-on-worker",
+  "name": "Waline on Worker",
+  "summary": {
+    "en": "A Waline-compatible comment system running on Cloudflare Workers and D1.",
+    "zh-CN": "运行在 Cloudflare Workers 与 D1 上的 Waline 兼容评论系统。"
+  },
+  "homepage": "https://github.com/lsy-404/Waline_On_Worker",
+  "issues": { "url": "https://github.com/lsy-404/Waline_On_Worker/issues/new" },
+  "version": "__VERSION__",
+  "tag": "__TAG__",
+  "buildTime": "__BUILD_TIME__",
+  "package": { "artifact": "overture.tar.gz", "sha256": "__SHA256__", "bytes": __BYTES__ },
+  "license": { "id": "GPL-3.0-or-later", "text": "__LICENSE__" },
+  "terms": {
+    "required": true,
+    "texts": {
+      "zh-CN": "部署会在你的 Cloudflare 账户中创建或复用一个 D1 数据库、部署 Worker，并写入 JWT_SECRET。普通更新保留现有 D1 数据与 JWT_SECRET；完整重建会保留 D1 数据，但会生成新的 JWT_SECRET，现有登录会话将失效。",
+      "*": "Deployment creates or reuses a D1 database in your Cloudflare account, deploys a Worker, and writes JWT_SECRET. Regular updates preserve existing D1 data and JWT_SECRET. A full rebuild preserves D1 data but generates a new JWT_SECRET, invalidating existing login sessions."
+    }
+  },
+  "authModes": ["oauth", "auto"],
+  "permissions": [
+    {
+      "key": "workers_scripts",
+      "requirement": "required",
+      "oauthScopes": ["workers-scripts.read", "workers-scripts.write", "workers-scripts.bind"],
+      "scope": "account",
+      "level": "write",
+      "label": { "en": "Workers Scripts", "zh-CN": "Workers 脚本" },
+      "scenario": { "en": "Deploy the Worker and store its JWT secret.", "zh-CN": "部署 Worker 并存储 JWT 密钥。" }
+    },
+    {
+      "key": "d1",
+      "requirement": "required",
+      "oauthScopes": ["d1.read", "d1.write"],
+      "scope": "account",
+      "level": "write",
+      "label": { "en": "D1", "zh-CN": "D1 数据库" },
+      "scenario": { "en": "Create or reuse the comment database and apply its schema.", "zh-CN": "创建或复用评论数据库并写入结构。" }
+    },
+    {
+      "key": "workers_routes",
+      "requirement": "required",
+      "oauthScopes": ["workers-routes.read", "workers-routes.write", "zone.read"],
+      "scope": "zone",
+      "level": "write",
+      "label": { "en": "Workers Routes and Zones", "zh-CN": "Workers 路由与区域" },
+      "scenario": { "en": "Attach the Worker to your Cloudflare-managed domain.", "zh-CN": "将 Worker 绑定到你由 Cloudflare 托管的域名。" }
+    }
+  ],
+  "resources": [
+    {
+      "id": "db",
+      "kind": "d1",
+      "binding": "DB",
+      "defaultName": "${worker}-db",
+      "required": true,
+      "match": { "names": ["waline-db", "${worker}-db"] },
+      "label": { "en": "Comment database", "zh-CN": "评论数据库" },
+      "help": { "en": "Existing databases are reused; updates never replace their data.", "zh-CN": "可复用现有数据库；更新不会替换其中的数据。" }
+    }
+  ],
+  "worker": {
+    "defaultName": "waline-on-worker",
+    "module": "worker/index.js",
+    "compatibilityDate": "2026-06-04",
+    "compatibilityFlags": ["nodejs_compat"],
+    "vars": [{ "name": "SECURE_DOMAINS", "value": "${input:secure_domains}" }]
+  },
+  "inputs": [
+    {
+      "id": "secure_domains",
+      "kind": "text",
+      "label": { "en": "Allowed CORS origins", "zh-CN": "允许的 CORS 源地址" },
+      "help": { "en": "Optional comma-separated origins, for example https://example.com. Leave empty to keep an existing setting on updates.", "zh-CN": "可选，以逗号分隔的源地址，例如 https://example.com。更新时留空会保留已有设置。" }
+    },
+    {
+      "id": "domain",
+      "kind": "domain",
+      "required": true,
+      "label": { "en": "Cloudflare-managed domain", "zh-CN": "由 Cloudflare 托管的域名" },
+      "help": { "en": "A hostname in a Cloudflare zone where Waline will be available.", "zh-CN": "Waline 将使用的、位于 Cloudflare 区域中的主机名。" }
+    },
+    {
+      "id": "regenerate_jwt",
+      "kind": "toggle",
+      "onlyMode": "overwrite",
+      "label": { "en": "Regenerate JWT secret", "zh-CN": "重新生成 JWT 密钥" },
+      "help": { "en": "Invalidates existing login sessions. Enable if an older installation has no JWT secret.", "zh-CN": "会使现有登录会话失效。旧实例没有 JWT 密钥时可启用。" }
+    }
+  ],
+  "capabilities": ["d1", "secrets", "worker", "domains"],
+  "steps": [
+    { "id": "database", "label": { "en": "Provision comment database", "zh-CN": "准备评论数据库" } },
+    { "id": "schema", "label": { "en": "Apply database schema", "zh-CN": "写入数据库结构" } },
+    { "id": "rebuild", "label": { "en": "Rebuild Worker if requested", "zh-CN": "按需完整重建 Worker" }, "optional": true },
+    { "id": "worker", "label": { "en": "Deploy and attach Worker", "zh-CN": "部署并绑定 Worker" }, "weight": 2 },
+    { "id": "secret", "label": { "en": "Configure JWT secret", "zh-CN": "配置 JWT 密钥" } }
+  ],
+  "health": { "path": "/" },
+  "done": { "links": [{ "label": { "en": "Open Waline administration", "zh-CN": "打开 Waline 管理面板" }, "href": "${url}/ui" }] }
+}

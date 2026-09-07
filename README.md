@@ -31,13 +31,6 @@ For international audience: [English Documentation](README_EN.md)
 | **框架**           | [Hono](https://hono.dev/)                                             |
 | **语言**           | TypeScript                                                             |
 
-> [!CAUTION]
-> **AI 辅助开发声明**
->
-> 本项目的代码实现主要由 AI 主导完成。尽管已经尽可能地进行了人工代码审查和测试，但**无法保证**与原版 Waline Server 的所有行为完全一致。
->
-> 已经尽可能做了鉴权和边界情况测试，**请在生产环境使用前自行评估风险。** 欢迎提交 Issue 和 Pull Request 来帮助改进。
-
 ## 功能状态
 
 - [x] 评论 CRUD（线程化、计数、最近评论）
@@ -92,7 +85,18 @@ Akismet API Key 支持**两种放置方式**，环境变量优先级始终高于
 
 两种方案可按需选用，无需修改代码。
 
-## 快速开始
+## 推荐部署：Overture
+
+使用 [Overture 公共部署入口](https://overture.demo-w10v.workers.dev/?src=lsy-404/Waline_On_Worker) 可以直接部署，无需本地安装 Node.js 或 Wrangler。准备一个由 Cloudflare 托管的域名后，选择本仓库的发布版本；Overture 会创建或复用 D1 数据库、写入 schema、部署 Worker、绑定该域名，并在首次部署时生成 `JWT_SECRET`。
+
+Overture 提供两种 Cloudflare 认证方式：
+
+- **OAuth**：在 Cloudflare 授权 Workers Scripts、D1 和域名绑定所需的权限。
+- **Account API Token**：使用 Overture 预填权限模板创建并粘贴 API Token；该 Token 只用于本次部署，不会作为应用凭据保存。
+
+普通更新保留评论数据和已有 `JWT_SECRET`。完整重建也保留 D1 数据，但会生成新的 `JWT_SECRET`，使现有登录会话失效。更新时将 CORS 源地址留空会保留当前 `SECURE_DOMAINS`；如需清空它，请在 Cloudflare Dashboard 的 Worker 变量中修改。
+
+## 手动部署
 
 ```bash
 git clone https://github.com/lsy-404/Waline_On_Worker.git
@@ -113,7 +117,7 @@ pnpm run deploy
 
 ### v1.1.0
 
-- **修复：OAuth 社交账号绑定** — 已登录用户通过社交方式登录时，现在会正确将社交账号关联至当前密码账号，而非创建新账号。若社交 ID 已绑定其他账号，将返回明确的 `oauth_already_bound` 错误。（对应 Issue #2）
+- **修复：OAuth 社交账号绑定** — 已登录用户通过社交方式登录时，现在会正确将社交账号关联至当前密码账号，而非创建新账号。若社交 ID 已绑定其他账号，将返回明确的 `oauth_already_bound` 错误。
 - **Akismet 反垃圾评论** — 原生支持 Akismet，与 LLM 审查并列。管理员在设置页选择四档模式（关 / Akismet / LLM / Mix）。Akismet 密钥可通过 `wrangler secret`（服务端，优先）或管理面板（存储于 D1）两种方式配置。
 - **统一反垃圾流水线** — 内部重构，所有反垃圾检测路径合并至单一 `runSpamReview()` 函数，消除冗余 DB 查询。
 - **设置批量读取** — 评论提交路径中的设置查询统一为单次 `getSettings()` 批量调用，不再多次串行查询。

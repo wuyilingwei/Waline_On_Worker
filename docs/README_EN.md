@@ -1,6 +1,12 @@
 # Waline on Worker - Detailed Documentation
 
-## Quick Start
+## Recommended deployment: Overture
+
+Prepare a Cloudflare-managed domain, open the [public Overture deployment page](https://overture.demo-w10v.workers.dev/?src=lsy-404/Waline_On_Worker), then select a release from this repository. It creates or reuses D1, applies the schema, deploys the Worker, attaches the domain, and generates `JWT_SECRET` for a first deployment.
+
+Choose **OAuth** to authorize Workers Scripts, D1, and domain attachment, or **Account API Token** to create and paste a token from Overture's prefilled permission template. The token is used only for this deployment and never becomes an application credential. Regular updates retain comment data and `JWT_SECRET`; a full rebuild retains D1 data but creates a new secret and invalidates login sessions. An empty CORS origins field during an update preserves `SECURE_DOMAINS`; clear or change it in the Cloudflare Dashboard Worker variables.
+
+## Manual deployment
 
 ### Prerequisites
 

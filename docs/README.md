@@ -2,7 +2,13 @@
 
 For international audience: [English Documentation](README_EN.md)
 
-## 快速开始
+## 推荐部署：Overture
+
+准备一个由 Cloudflare 托管的域名后，打开 [Overture 公共部署入口](https://overture.demo-w10v.workers.dev/?src=lsy-404/Waline_On_Worker)，选择本仓库的发布版本即可部署。它会创建或复用 D1 数据库、写入 schema、部署 Worker、绑定域名，并在首次部署时生成 `JWT_SECRET`。
+
+可选择 **OAuth**（授权 Workers Scripts、D1 与域名绑定权限）或 **Account API Token**（按预填权限模板创建并粘贴 Token）。Token 仅用于当前部署，不会作为应用凭据保存。普通更新会保留评论数据和 `JWT_SECRET`；完整重建会保留 D1 数据但生成新密钥，现有登录会话会失效。更新时留空 CORS 源地址会保留当前 `SECURE_DOMAINS`，可在 Cloudflare Dashboard 的 Worker 变量中清空或修改。
+
+## 手动部署
 
 ### 前提条件
 

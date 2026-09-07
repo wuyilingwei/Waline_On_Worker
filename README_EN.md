@@ -30,13 +30,6 @@ A [Waline](https://waline.js.org/) comment system backend implementation running
 | **Framework**      | [Hono](https://hono.dev/)                                             |
 | **Language**       | TypeScript                                                             |
 
-> [!CAUTION]
-> **AI-Assisted Development Disclaimer**
->
-> The code implementation of this project was primarily driven by AI. Although manual code reviews and testing have been performed as much as possible, **complete parity** with all behaviors of the original Waline Server **cannot be guaranteed**.
->
-> Authentication and edge cases have been tested as thoroughly as possible, but **please assess the risks yourself before using it in a production environment.** Issues and Pull Requests are highly welcome to help improve the project.
-
 ## Feature Status
 
 - [x] Comment CRUD (Threading, counters, recent comments)
@@ -91,7 +84,18 @@ The Akismet API key supports **two placement methods** — the environment varia
 
 This dual-placement design means you can manage the key however fits your workflow without changing code.
 
-## Quick Start
+## Recommended deployment: Overture
+
+Deploy directly through the [public Overture deployment page](https://overture.demo-w10v.workers.dev/?src=lsy-404/Waline_On_Worker) without installing Node.js or Wrangler locally. Prepare a Cloudflare-managed domain, then select a release from this repository. Overture creates or reuses the D1 database, applies the schema, deploys the Worker, attaches that domain, and generates `JWT_SECRET` on the first deployment.
+
+Overture supports two Cloudflare authentication methods:
+
+- **OAuth**: authorize the required Workers Scripts, D1, and domain-attachment permissions with Cloudflare.
+- **Account API Token**: create and paste a token using Overture's prefilled permission template. The token is used only for this deployment and is never stored as an application credential.
+
+Regular updates preserve comment data and the existing `JWT_SECRET`. A full rebuild also preserves D1 data but generates a new `JWT_SECRET`, invalidating current login sessions. Leaving the CORS origins field empty during an update preserves the current `SECURE_DOMAINS`; clear or change it in the Cloudflare Dashboard Worker variables.
+
+## Manual deployment
 
 ```bash
 git clone https://github.com/lsy-404/Waline_On_Worker.git

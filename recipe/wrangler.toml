@@ -1,0 +1,4 @@
+name = "waline-on-worker-overture-build"
+main = "../src/index.ts"
+compatibility_date = "2026-06-04"
+compatibility_flags = ["nodejs_compat"]
