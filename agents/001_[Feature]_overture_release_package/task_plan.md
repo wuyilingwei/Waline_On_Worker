@@ -5,3 +5,7 @@
 - [x] 添加 release workflow、中文与英文使用文档
 - [x] 在 `/test` 验证配方、归档内容、D1 幂等 schema 与部署状态分支
 - [x] 运行构建、测试、Wrangler dry run，审查 diff 并提交
+
+- [x] 合并到本地 main 并推送远端
+- [x] 发布 v1.1.1 并启动 Release 构建
+- [x] 验证 CI 和线上部署包发现
